@@ -63,14 +63,18 @@ router.post('/user/signup', (req, res) => {
     user.lastName = lastName;
     user.email = email;
     user.password = hashedPassword;
-    User.find({ email: user.email }, (err, u) => {
-        if (err) return res.status(400).send("Sign up failed, please try again.");
-        if (u && u.length) return res.status(400).send("Email duplicated");
-        user.save((err) => {
+    try {
+        User.find({ email: user.email }, (err, u) => {
             if (err) return res.status(400).send("Sign up failed, please try again.");
-            return res.status(200).send("Sign up successed!");
+            if (u && u.length) return res.status(400).send("Email duplicated");
+            user.save((err) => {
+                if (err) return res.status(400).send("Sign up failed, please try again.");
+                return res.status(200).send("Sign up successed!");
+            });
         });
-    });
+    } catch (error) {
+        res.status(500).send("Something went wrong");
+    }
 });
 
 router.post("/user/login", async (req, res) => {
@@ -114,19 +118,26 @@ router.post('/video/upload', (req, res) => {
     video.nationality = nationality;
     video.synopsis = synopsis;
     video.videoUrl = videoUrl;
-    video.save((err) => {
-        if (err) return res.status(400).send("Upload failed, please try again.");
-        return res.status(200).send("Upload successed!");
-    });
+    try {
+        video.save((err) => {
+            if (err) return res.status(400).send("Upload failed, please try again.");
+            return res.status(200).send("Upload successed!");
+        });
+    } catch (error) {
+        res.status(500).send("Something went wrong");
+    }
 });
 
 router.get('/:userId/video/list', (req, res) => {
     const userId = parseInt(req.params.userId);
-    console.log(userId);
-    Video.find({userId: userId}, 'videoTitle synopsis createdAt', { sort: { 'createdAt': 1 } }, (err, video) => {
-        if (err) return res.status(400).send("Get uploaded videos failed, please try again.");
-        return res.status(200).json({ success: true, video: video});
-    });
+    try {
+        Video.find({ userId: userId }, 'videoTitle synopsis createdAt', { sort: { 'createdAt': 1 } }, (err, video) => {
+            if (err) return res.status(400).send("Get uploaded videos failed, please try again.");
+            return res.status(200).json({ success: true, video: video });
+        });
+    } catch (error) {
+        res.status(500).send("Something went wrong");
+    }
 });
 
 app.use('/api', router);
