@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 const router = express.Router();
 
-const dbRoute = 'mongodb://zouachang:MiguC123@13.75.73.57:27017/user';
+const dbRoute = 'mongodb://zouachang:MiguC123@101.200.88.24:27017/user';
 mongoose.connect(dbRoute, { useNewUrlParser: true });
 autoIncrement.initialize(mongoose.connection);
 var userSchema = new Schema({
