@@ -129,7 +129,7 @@ router.post('/video/upload', (req, res) => {
 });
 
 router.get('/:userId/video/list', (req, res) => {
-    const userId = parseInt(req.params.userId);
+    const userId = req.params.userId;
     try {
         Video.find({ userId: userId }, 'videoTitle synopsis createdAt', { sort: { 'createdAt': 1 } }, (err, video) => {
             if (err) return res.status(400).send("Get uploaded videos failed, please try again.");
