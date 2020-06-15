@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
+// const autoIncrement = require('mongoose-auto-increment');
 const Schema = mongoose.Schema;
 const express = require('express');
 var cors = require('cors');
@@ -15,8 +15,8 @@ app.use(cors());
 const router = express.Router();
 
 const dbRoute = 'mongodb://zouachang:MiguC123@101.200.88.24:27017/user';
-mongoose.connect(dbRoute, { useNewUrlParser: true });
-autoIncrement.initialize(mongoose.connection);
+mongoose.connect(dbRoute, { useNewUrlParser: true, useUnifiedTopology: true });
+// autoIncrement.initialize(mongoose.connection);
 var userSchema = new Schema({
     firstName: String,
     lastName: String,
@@ -25,7 +25,7 @@ var userSchema = new Schema({
 },
     { timestamps: true });
 
-userSchema.plugin(autoIncrement.plugin, { model: 'User', startAt: 1 });
+// userSchema.plugin(autoIncrement.plugin, { model: 'User', startAt: 1 });
 let User = mongoose.connection.model('User', userSchema);
 
 var videoSchema = new Schema({
